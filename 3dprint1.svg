@@ -1,0 +1,483 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="1600"
+  height="1100"
+  viewBox="0 0 1600 1100"
+>
+  <title>Modular tile with central and edge FSR sensors</title>
+
+  <desc>
+    Conceptual hexagonal tile with a removable top cap,
+    central FSR, six edge-sensor interfaces, recessed wiring,
+    and a protected PCB mounting bay.
+    Adjacent tiles share one sensor at each common seam.
+    This is not dimensioned manufacturing CAD.
+  </desc>
+
+  <defs>
+    <style>
+      text {
+        font-family: Arial, Helvetica, sans-serif;
+        fill: #17324d;
+      }
+
+      .title {
+        font-size: 34px;
+        font-weight: 700;
+      }
+
+      .heading {
+        font-size: 23px;
+        font-weight: 700;
+      }
+
+      .label {
+        font-size: 18px;
+      }
+
+      .small {
+        font-size: 15px;
+      }
+
+      .outline {
+        stroke: #37536d;
+        stroke-width: 3;
+      }
+
+      .leader {
+        fill: none;
+        stroke: #37536d;
+        stroke-width: 2;
+      }
+
+      .wire {
+        fill: none;
+        stroke: #8b5cf6;
+        stroke-width: 2;
+        stroke-dasharray: 6 5;
+      }
+    </style>
+
+    <!-- Reusable edge-sensor mounting pocket. -->
+    <g id="edge-pocket">
+      <rect
+        x="-32"
+        y="-14"
+        width="64"
+        height="28"
+        rx="7"
+        fill="#fbbf24"
+        stroke="#b45309"
+        stroke-width="2"
+      />
+    </g>
+
+    <!-- Reusable PCB mounting hole. -->
+    <circle id="mount-hole" r="5" fill="#64748b"/>
+  </defs>
+
+  <rect width="1600" height="1100" fill="#f8fafc"/>
+
+  <!-- Header -->
+  <g id="header">
+    <text x="55" y="60" class="title">
+      MODULAR FSR TILE — TOP SECTION CONCEPT
+    </text>
+
+    <text x="55" y="93" class="label">
+      Independent tile electronics + centre sensing + sensing at every shared edge
+    </text>
+  </g>
+
+  <!-- ======================================================
+       01: TOP VIEW, WITH THE REMOVABLE TOP CAP HIDDEN
+       ====================================================== -->
+  <g id="tile-top-view">
+    <text x="55" y="145" class="heading">
+      01  UNDER THE REMOVABLE TOP CAP
+    </text>
+
+    <!-- Hexagonal structural shell. -->
+    <polygon
+      points="
+        555.5,525
+        365,635
+        174.5,525
+        174.5,305
+        365,195
+        555.5,305
+      "
+      fill="#e2e8f0"
+      class="outline"
+    />
+
+    <!-- Internal cavity. -->
+    <polygon
+      points="
+        533.9,512.5
+        365,610
+        196.1,512.5
+        196.1,317.5
+        365,220
+        533.9,317.5
+      "
+      fill="#ffffff"
+      stroke="#94a3b8"
+      stroke-width="2"
+    />
+
+    <!-- Recessed wiring routes.
+         These are schematic routes, not copper PCB traces. -->
+    <g id="wire-channels" class="wire">
+      <path d="M 448.8 560.2 L 365 460 L 365 475"/>
+      <path d="M 281.2 560.2 L 365 460 L 365 475"/>
+      <path d="M 197.3 415 L 365 460 L 365 475"/>
+      <path d="M 281.2 269.8 L 365 460 L 365 475"/>
+      <path d="M 448.8 269.8 L 365 460 L 365 475"/>
+      <path d="M 532.7 415 L 365 460 L 365 475"/>
+      <path d="M 365 455 L 365 475"/>
+    </g>
+
+    <!-- Protected electronics bay, below the cap. -->
+    <g id="pcb-bay">
+      <rect
+        x="285"
+        y="475"
+        width="160"
+        height="70"
+        rx="8"
+        fill="#dbeafe"
+        stroke="#37536d"
+        stroke-width="2"
+      />
+
+      <use href="#mount-hole" x="300" y="492"/>
+      <use href="#mount-hole" x="430" y="492"/>
+      <use href="#mount-hole" x="300" y="531"/>
+      <use href="#mount-hole" x="430" y="531"/>
+
+      <text x="310" y="504" class="label">PCB / ADC</text>
+      <text x="308" y="529" class="small">Protected bay</text>
+    </g>
+
+    <!-- Central FSR interface. -->
+    <g id="central-fsr">
+      <circle
+        cx="365"
+        cy="415"
+        r="40"
+        fill="#14b8a6"
+        stroke="#0f766e"
+        stroke-width="3"
+      />
+
+      <text
+        x="365"
+        y="422"
+        text-anchor="middle"
+        class="heading"
+      >C0</text>
+    </g>
+
+    <!-- Six edge pockets / seam-sensor interfaces. -->
+    <g id="edge-sensor-interfaces">
+      <use
+        href="#edge-pocket"
+        transform="translate(448.8 560.2) rotate(150)"
+      />
+      <use
+        href="#edge-pocket"
+        transform="translate(281.2 560.2) rotate(-150)"
+      />
+      <use
+        href="#edge-pocket"
+        transform="translate(197.3 415) rotate(-90)"
+      />
+      <use
+        href="#edge-pocket"
+        transform="translate(281.2 269.8) rotate(-30)"
+      />
+      <use
+        href="#edge-pocket"
+        transform="translate(448.8 269.8) rotate(30)"
+      />
+      <use
+        href="#edge-pocket"
+        transform="translate(532.7 415) rotate(90)"
+      />
+
+      <g text-anchor="middle" class="small">
+        <text x="448.8" y="565.2">E1</text>
+        <text x="281.2" y="565.2">E2</text>
+        <text x="197.3" y="420">E3</text>
+        <text x="281.2" y="274.8">E4</text>
+        <text x="448.8" y="274.8">E5</text>
+        <text x="532.7" y="420">E6</text>
+      </g>
+    </g>
+
+    <!-- Legend -->
+    <text x="80" y="680" class="label">
+      C0: central FSR + load-spreading pad
+    </text>
+
+    <text x="80" y="709" class="label">
+      E1–E6: six edge pockets / seam-sensor interfaces
+    </text>
+
+    <text x="80" y="738" class="label">
+      Purple: recessed wire channels to the PCB bay
+    </text>
+
+    <text x="80" y="767" class="label">
+      PCB stays outside the impact load path
+    </text>
+  </g>
+
+  <!-- ======================================================
+       02: SHARED EDGE SENSOR CROSS-SECTION
+       ====================================================== -->
+  <g id="shared-edge-cross-section">
+    <text x="765" y="145" class="heading">
+      02  SENSOR AT THE JOIN BETWEEN TILES
+    </text>
+
+    <text x="849" y="198" class="label">Tile A top cap</text>
+    <text x="1180" y="198" class="label">Tile B top cap</text>
+
+    <!-- Separate top caps with a seam between them. -->
+    <rect
+      x="780" y="210"
+      width="310" height="35"
+      rx="8"
+      fill="#cbd5e1"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <rect
+      x="1110" y="210"
+      width="310" height="35"
+      rx="8"
+      fill="#cbd5e1"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <!-- Shared load bridge / force-transfer pad. -->
+    <rect
+      x="1040" y="255"
+      width="120" height="24"
+      rx="6"
+      fill="#99f6e4"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <path d="M 1160 267 L 1190 267" class="leader"/>
+
+    <text x="1200" y="273" class="small">
+      Shared load bridge / pad
+    </text>
+
+    <!-- One sensor for the shared seam. -->
+    <rect
+      x="1050" y="290"
+      width="100" height="15"
+      rx="4"
+      fill="#fbbf24"
+      stroke="#b45309"
+      stroke-width="2"
+    />
+
+    <path d="M 1150 298 L 1190 298" class="leader"/>
+
+    <text x="1200" y="304" class="small">
+      One shared edge FSR
+    </text>
+
+    <!-- Rigid reaction surface under the FSR. -->
+    <rect
+      x="800" y="321"
+      width="600" height="30"
+      rx="8"
+      fill="#94a3b8"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <text x="845" y="384" class="label">
+      Rigid sensor seat / backing + travel stops
+    </text>
+
+    <!-- Sensor wiring to one assigned controller. -->
+    <path
+      d="M 1100 305 L 1100 410 L 930 410"
+      class="leader"
+    />
+
+    <text x="784" y="440" class="label">
+      Wire to ONE tile controller; identify the seam as edge A–B
+    </text>
+
+    <text x="784" y="472" class="label">
+      Controlled cap movement loads the pad and FSR
+    </text>
+
+    <text x="784" y="500" class="label">
+      Avoid rigid load bypass; add overload travel stops
+    </text>
+  </g>
+
+  <!-- ======================================================
+       03: CENTRAL SENSOR AND PROTECTED PCB CROSS-SECTION
+       ====================================================== -->
+  <g id="central-fsr-cross-section">
+    <text x="765" y="564" class="heading">
+      03  CENTRE SENSOR + CIRCUIT SUPPORT
+    </text>
+
+    <text x="810" y="592" class="label">
+      Removable top cap
+    </text>
+
+    <rect
+      x="790" y="605"
+      width="600" height="32"
+      rx="8"
+      fill="#cbd5e1"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <!-- Force-transfer pad above the centre FSR. -->
+    <rect
+      x="1010" y="647"
+      width="155" height="22"
+      rx="6"
+      fill="#99f6e4"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <text x="1200" y="665" class="small">
+      Load-spreading pad
+    </text>
+
+    <!-- Centre FSR. -->
+    <rect
+      x="1020" y="681"
+      width="135" height="14"
+      rx="4"
+      fill="#14b8a6"
+      stroke="#0f766e"
+      stroke-width="2"
+    />
+
+    <text x="1200" y="698" class="small">
+      Central FSR
+    </text>
+
+    <!-- Dedicated structural sensor seat. -->
+    <rect
+      x="990" y="706"
+      width="195" height="25"
+      rx="6"
+      fill="#94a3b8"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <text x="1200" y="727" class="small">
+      Rigid sensor seat
+    </text>
+
+    <!-- Supports transfer load to the base, not to the PCB. -->
+    <rect
+      x="1155" y="731"
+      width="30" height="59"
+      fill="#94a3b8"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <rect
+      x="970" y="731"
+      width="20" height="59"
+      fill="#94a3b8"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <!-- Electronics, positioned away from structural supports. -->
+    <rect
+      x="825" y="746"
+      width="125" height="23"
+      rx="5"
+      fill="#dbeafe"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <!-- PCB standoffs. -->
+    <rect x="838" y="769" width="12" height="21" fill="#64748b"/>
+    <rect x="925" y="769" width="12" height="21" fill="#64748b"/>
+
+    <path d="M 825 756 L 780 756 L 780 865" class="leader"/>
+
+    <text x="795" y="870" class="small">
+      PCB on standoffs — protected from impact loads
+    </text>
+
+    <!-- Structural base. -->
+    <rect
+      x="790" y="790"
+      width="600" height="28"
+      rx="8"
+      fill="#64748b"
+      stroke="#37536d"
+      stroke-width="2"
+    />
+
+    <text x="806" y="845" class="label">
+      Structural base + cable exit + service access
+    </text>
+  </g>
+
+  <!-- ======================================================
+       04: ELECTRICAL READOUT
+       ====================================================== -->
+  <g id="readout-architecture">
+    <text x="55" y="915" class="heading">
+      04  READOUT ARCHITECTURE
+    </text>
+
+    <text x="55" y="946" class="label">
+      Centre + assigned edge FSRs → voltage dividers → ADC / multiplexer → controller → Bluetooth
+    </text>
+
+    <text x="55" y="978" class="label">
+      Read each shared edge once. Neighbouring tiles reference the same edge ID.
+    </text>
+  </g>
+
+  <!-- Design limitations -->
+  <g id="design-notes">
+    <rect
+      x="50" y="1000"
+      width="1500" height="70"
+      rx="8"
+      fill="#fff7ed"
+      stroke="#fdba74"
+      stroke-width="2"
+    />
+
+    <text x="70" y="1026" class="small">
+      CONCEPT ONLY — not dimensioned or print-ready. Hexagonal layout is an assumption, not an exact photo trace.
+    </text>
+
+    <text x="70" y="1051" class="small">
+      Finalise sensor dimensions, cap stiffness, clearances and force range; test centre/edge cross-talk before fabrication.
+    </text>
+  </g>
+</svg>
