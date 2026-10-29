@@ -151,8 +151,8 @@ async function main() {
     sectionTitle(s, "What we simulated", "模擬目標");
 
     const cards = [
-      { t: "Hardware", d: "Uno R3, 4 pot stand-ins for FSRs, 10 kΩ dividers, 16×2 LCD (4-bit), piezo, 9 V + switch on VIN" },
-      { t: "Software", d: "Hit + crosstalk margin (80 ADC), one score per press, LCD + beep, re-arm after release" },
+      { t: "Hardware", d: "Uno R3, 4 Tinkercad Force Sensors, 10 kΩ dividers, 16×2 LCD, piezo, 9 V + switch on VIN" },
+      { t: "Software", d: "0.1–10 N bands, crosstalk margin 80 ADC, one score per press, LCD Score line" },
       { t: "Link to product", d: "Each FSR maps to one 3D-printed face tile (T1–T4) from the project brief" },
       { t: "Design URL", d: "tinkercad.com/things/fSkU8ixGOXg" },
     ];
@@ -671,6 +671,122 @@ async function main() {
         margin: 0,
       }
     );
+  }
+
+  // ── 10. Proof of concept ──────────────────────────────────
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.bg };
+    goldFrame(s, pres);
+    sectionTitle(s, "Proof of concept", "實機模擬已跑通");
+
+    const proof = [
+      { n: "01", t: "Four real Force Sensors", d: "Slider on each tile, 0 N to 10 N. Not a potentiometer stand-in." },
+      { n: "02", t: "Detection floor", d: "Under 0.1 N the part is open. The sketch ignores it." },
+      { n: "03", t: "Force becomes a score", d: "Light, medium, and hard map to different points on the LCD." },
+      { n: "04", t: "Seen on the display", d: "Idle screen: Dartboard ready / Score: 0." },
+    ];
+    proof.forEach((st, i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = 0.45 + col * 4.7;
+      const y = 1.3 + row * 1.85;
+      s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+        x, y, w: 4.45, h: 1.7,
+        fill: { color: C.card },
+        line: { color: "2A2A2A", width: 1 },
+        rectRadius: 0.08,
+      });
+      s.addText(st.n, {
+        x: x + 0.22, y: y + 0.2, w: 0.7, h: 0.35,
+        fontSize: 16, fontFace: "Arial", color: C.gold, bold: true, margin: 0,
+      });
+      s.addText(st.t, {
+        x: x + 1.0, y: y + 0.22, w: 3.2, h: 0.35,
+        fontSize: 15, fontFace: "Arial", color: C.white, bold: true, margin: 0,
+      });
+      s.addText(st.d, {
+        x: x + 0.22, y: y + 0.75, w: 4.0, h: 0.7,
+        fontSize: 13, fontFace: "Arial", color: C.mute, margin: 0,
+      });
+    });
+  }
+
+  // ── 11. Our idea ──────────────────────────────────────────
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.bg };
+    goldFrame(s, pres);
+    sectionTitle(s, "Our idea", "三角靶：落點同力度一齊計");
+
+    s.addText("A triangular board, four independent faces, and a score that depends on where the dart lands and how hard it hits.", {
+      x: 0.5, y: 1.25, w: 9.0, h: 0.55,
+      fontSize: 15, fontFace: "Arial", color: C.white, margin: 0,
+    });
+
+    const idea = [
+      { t: "Geometry", d: "One large triangle, split into a red center and three gold outer faces. About 262 mm on a side." },
+      { t: "Sense force", d: "Face, then EVA foam, then one FSR. The foam catches the dart and passes the load into the sensor." },
+      { t: "Score", d: "Center starts at 50, each outer face at 20. A harder hit adds the bonus. A miss under the floor scores 0." },
+      { t: "Standalone", d: "9 V battery and a rocker switch. LCD shows the total. The piezo marks a light, medium, or hard hit." },
+    ];
+    idea.forEach((item, i) => {
+      const y = 1.95 + i * 0.8;
+      s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+        x: 0.45, y, w: 9.1, h: 0.72,
+        fill: { color: C.card },
+        line: { color: "2A2A2A", width: 1 },
+        rectRadius: 0.06,
+      });
+      s.addText(item.t, {
+        x: 0.65, y: y + 0.16, w: 1.7, h: 0.4,
+        fontSize: 14, fontFace: "Arial", color: C.gold, bold: true, margin: 0, valign: "middle",
+      });
+      s.addText(item.d, {
+        x: 2.45, y: y + 0.12, w: 6.9, h: 0.48,
+        fontSize: 13, fontFace: "Arial", color: C.mute, margin: 0, valign: "middle",
+      });
+    });
+  }
+
+  // ── 12. Further plans ─────────────────────────────────────
+  {
+    const s = pres.addSlide();
+    s.background = { color: C.bg };
+    goldFrame(s, pres);
+    sectionTitle(s, "Further plans", "Canva 規劃板上的下一步");
+
+    const plans = [
+      { t: "Print the board", d: "Fusion 360 faces, snap-fits, keyhole wall mount, and a bay for the Uno, switch, and 9 V cell. PLA or PETG, EVA on the face." },
+      { t: "Calibrate real FSRs", d: "Move the same divider off the breadboard. Set the 0.1 N floor and the 3 N / 7 N bands from live throws, not from the slider." },
+      { t: "Second brain", d: "Waveshare ESP32-C6 touch LCD on its own USB cable. UART through a resistor divider and a shared ground. Do not tie the 5 V and 3.3 V rails together." },
+      { t: "Log the game", d: "Python on the laptop reads the serial line, so each hit keeps its zone, newtons, and score." },
+    ];
+    plans.forEach((item, i) => {
+      const col = i % 2;
+      const row = Math.floor(i / 2);
+      const x = 0.45 + col * 4.7;
+      const y = 1.3 + row * 1.85;
+      s.addShape(pres.shapes.ROUNDED_RECTANGLE, {
+        x, y, w: 4.45, h: 1.7,
+        fill: { color: C.card },
+        line: { color: "2A2A2A", width: 1 },
+        rectRadius: 0.08,
+      });
+      s.addShape(pres.shapes.RECTANGLE, {
+        x, y, w: 0.08, h: 1.7,
+        fill: { color: C.gold },
+        line: { color: C.gold, width: 0 },
+      });
+      s.addText(item.t, {
+        x: x + 0.28, y: y + 0.22, w: 3.95, h: 0.35,
+        fontSize: 16, fontFace: "Arial", color: C.gold, bold: true, margin: 0,
+      });
+      s.addText(item.d, {
+        x: x + 0.28, y: y + 0.65, w: 3.95, h: 0.85,
+        fontSize: 13, fontFace: "Arial", color: C.mute, margin: 0,
+      });
+    });
   }
 
   await pres.writeFile({ fileName: OUT });
