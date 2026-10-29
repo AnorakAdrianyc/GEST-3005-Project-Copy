@@ -2,7 +2,7 @@
 
 Design: [GEST3005 Prototype simulation 1](https://www.tinkercad.com/things/fSkU8ixGOXg/editel)
 
-Each FSR is mounted under one of the four 3D-printed tiles from the project brief. A dart hits the printed face, the face compresses the EVA foam, and the foam presses that tile’s FSR. The two FSR leads then leave the tile and enter the breadboard divider. Tinkercad cannot place the printed tile, so the Force Sensor named for that tile is the sensor.
+Each FSR is mounted under one of the four 3D-printed tiles from the project brief. A dart hits the printed face, the face compresses the EVA foam, and the foam presses that tile’s FSR. The two FSR leads then leave the tile and enter the breadboard divider. Tinkercad cannot place the printed tile, so each channel is a 10 kΩ variable resistor named for that tile.
 
 The sensing page and the Fusion 360 page number the same four tiles differently. The sensor number follows the sensing page. The tile number follows the printed piece.
 
@@ -17,9 +17,22 @@ The sensing page and the Fusion 360 page number the same four tiles differently.
 
 ![Force path: printed face, EVA foam, FSR](images/brief_page_6.png)
 
-The four sensing parts are Tinkercad **Force Sensor** components (`sensorForce`), not potentiometers. Each one has two leads. Pressing it lowers its resistance. During simulation, select a sensor and drag its slider. The slider runs from 0 N to 10 N. Below 0.1 N the part is an open circuit, so the analog pin stays at rest and the sketch ignores the touch. A full 10 N press reads about 910, not 1023, because the sensor still has about 1.2 kΩ in series with the 10 kΩ divider resistor.
+The product uses a real FSR under each tile. In Tinkercad the sensing element on each channel is a **variable resistor whose maximum is 10 kΩ**, wired as a rheostat in series with a fixed **10 kΩ** resistor to GND:
 
-The sketch converts that analog reading back into newtons, clamps the result at 10 N, and picks the score from the table above. `dartboard/dartboard.ino` is the program stored on the Uno.
+`5V — variable resistor (0–10 kΩ) — analog pin — 10 kΩ — GND`
+
+That is not the LCD contrast pot. The contrast pot is a separate **250 kΩ** part on V0. Each sensing variable resistor has two leads on neighbouring breadboard columns. Turning the knob lowers its resistance and raises the analog reading. At the 10 kΩ stop there is no force. At 0 Ω the sketch treats the press as 10 N.
+
+`dartboarddemo.ino` maps that resistance linearly to newtons, then picks the score from the table above:
+
+| Sensor resistance | Approx. ADC | Force | Band |
+|---|---|---|---|
+| 10 kΩ | ~512 | 0 N | no hit |
+| 7 kΩ | ~602 | 3 N | start of `MEDIUM` |
+| 3 kΩ | ~787 | 7 N | start of `HARD` |
+| 0 Ω | 1023 | 10 N | full `HARD` |
+
+`LIGHT` is 0.1–3 N, `MEDIUM` is 3–7 N, and `HARD` is 7–10 N. A knob left at 10 kΩ does not score. An earlier build used Tinkercad’s Force Sensor part (`sensorForce`) with a non-linear 0–10 N slider; that curve is not what `dartboarddemo.ino` uses.
 
 ![Full circuit](images/circuit_full.png)
 
@@ -45,7 +58,7 @@ Score: 50
 
 The serial monitor prints the same pair, plus the measured force and the points just added: `T2 CENTER MEDIUM Score: 50 4.2N +50`. The buzzer pitch follows that range: 880 Hz light, 1100 Hz medium, 1500 Hz hard.
 
-That idle screen was checked in the running simulator after this sketch was loaded. The scored-hit rows in the next section are from the earlier potentiometer stand-in, before the Force Sensors and the 0–10 N bands were put in.
+That idle screen was checked in the running simulator after this sketch was loaded. The scored-hit rows in the next section are from the earlier 250 kΩ potentiometer stand-in, before the sensing pots were set to a 10 kΩ maximum and the linear 0–10 N map in `dartboarddemo.ino`.
 
 ## Earlier potentiometer runs
 
@@ -78,7 +91,7 @@ Separate runs, each starting from zero force:
 
 Breadboard connectivity follows `BreadBoardschematic.jpg`: red and blue rails are horizontal buses, and each a–e or f–j column is its own vertical group of five holes. The top rail pair is jumpered to the bottom rail pair. The `w` rail is 5 V and the `x` rail is GND.
 
-Each Force Sensor bridges two neighbouring columns. One lead is tied to 5 V. The other lead is the analog node: it goes to an Uno analog pin, through 10 kΩ, to GND.
+Each 10 kΩ sensing variable resistor bridges two neighbouring columns. One lead is tied to 5 V. The other lead is the analog node: it goes to an Uno analog pin, through a fixed 10 kΩ resistor, to GND.
 
 | Sensor | 5 V side | Analog node | Uno pin | 10 kΩ to GND |
 |---|---|---|---|---|
@@ -97,15 +110,17 @@ Each Force Sensor bridges two neighbouring columns. One lead is tied to 5 V. The
 | Piezo | Uno D8 and GND |
 | 9V battery | negative to GND; positive through the slide switch to Uno VIN only |
 
-The contrast potentiometer is 250 kΩ, not one of the 10 kΩ divider resistors. Its knob has to stay at that full 250 kΩ setting (Tinkercad Position 1), which parks the wiper at the GND end and holds V0 near 0 V. That is the only setting that keeps the score readable. Turning the knob so the wiper resistance falls below 250 kΩ raises V0, and the LCD then shows `error` instead of the zone and the score. Leave this knob alone during a scoring run. The four 10 kΩ resistors on A0–A3 are a separate part and stay at 10 kΩ.
+The contrast potentiometer is 250 kΩ. It is not one of the four sensing variable resistors, and it is not one of the four fixed 10 kΩ pull-downs. Its knob has to stay at that full 250 kΩ setting (Tinkercad Position 1), which parks the wiper at the GND end and holds V0 near 0 V. That is the only setting that keeps the score readable. Turning the knob so the wiper resistance falls below 250 kΩ raises V0, and the LCD then shows `error` instead of the zone and the score. Leave this knob alone during a scoring run. The sensing pots max out at 10 kΩ. The fixed divider resistors on A0–A3 stay at 10 kΩ.
 
-The 9 V battery is the power source for the finished board, so the dartboard can hang on a wall and run with no laptop attached. The positive lead goes through the slide switch into Uno VIN, and the negative lead goes to GND. VIN is the unregulated input. The Uno’s onboard regulator turns that 9 V into the 5 V rail that actually feeds the microcontroller, the LCD, the piezo, and the four Force Sensor dividers. A 9 V alkaline cell sits in the range VIN accepts (about 7–12 V). A direct 5 V pack would have nothing for that regulator to drop, and wiring 9 V straight onto the 5 V pin would over-voltage the chip and the LCD.
+The 9 V battery is the power source for the finished board, so the dartboard can hang on a wall and run with no laptop attached. The positive lead goes through the slide switch into Uno VIN, and the negative lead goes to GND. VIN is the unregulated input. The Uno’s onboard regulator turns that 9 V into the 5 V rail that actually feeds the microcontroller, the LCD, the piezo, and the four sensing dividers. A 9 V alkaline cell sits in the range VIN accepts (about 7–12 V). A direct 5 V pack would have nothing for that regulator to drop, and wiring 9 V straight onto the 5 V pin would over-voltage the chip and the LCD.
 
 The battery is not tied to the 5 V rail. The switch is the on/off control for that standalone supply: open the switch and VIN is disconnected. In Tinkercad the Uno is still powered by the virtual USB port during simulation, so the slide switch does not actually turn the board off on screen. The wire is still the real circuit. USB is only how the simulator, and later a programming cable, powers the Uno on the bench.
 
 ## Sketch
 
-`dartboard/dartboard.ino` is the program stored on the Uno. It averages eight `analogRead` samples, estimates newtons from the Force Sensor curve, then scores the winning tile. Each accepted hit calls `reportHit()`, which writes the zone and the force range (`LIGHT`, `MEDIUM`, or `HARD`) plus `Score:` to both the 16×2 LCD and the serial monitor. The first version scored again every 600 ms while a sensor stayed pressed. The saved version arms again only after every sensor is below 0.1 N, so one press is one dart.
+`dartboarddemo.ino` is the demo sketch for the 10 kΩ variable-resistor build. It averages eight `analogRead` samples, converts the reading with `SENSOR_MAX_OHMS = 10000` and `DIVIDER_OHMS = 10000` (10 kΩ at rest → 0 N, 0 Ω → 10 N), then scores the winning tile. Each accepted hit writes the zone and the force range (`LIGHT`, `MEDIUM`, or `HARD`) plus the score to the 16×2 LCD and to the serial monitor. A held press scores once. The next dart is accepted only after every sensor is below 0.1 N.
+
+`dartboard/dartboard.ino` still has the older Force Sensor curve for the `sensorForce` part. Use `dartboarddemo.ino` when the breadboard sensors are 10 kΩ variable resistors.
 
 ## What the earlier worker did not finish
 
