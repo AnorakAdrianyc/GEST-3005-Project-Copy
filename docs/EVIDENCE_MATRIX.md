@@ -16,7 +16,7 @@ One table mapping repository paths to **honesty labels**. Use this when writing 
 | [`Final Virtual Circuit.jpeg`](../Final%20Virtual%20Circuit.jpeg) | DEMO | Tinkercad / virtual bench photo used on demo materials |
 | [`dartboard/images/hero_board.png`](../dartboard/images/hero_board.png), [`circuit_full.png`](../dartboard/images/circuit_full.png), [`simulation_center_hit.png`](../dartboard/images/simulation_center_hit.png) | DEMO | Report/deck circuit and hit screenshots (in-repo mirrors where cited) |
 | [`cs/`](../cs/) | ARCHITECTURE | Fixture-first serial + optional EEG join; default `--replay-fixtures` |
-| [`cs/cs/serial_ingest/`](../cs/cs/serial_ingest/) | ARCHITECTURE | Parses `dartboarddemo.ino` `band=… zone=… N=… raw=… 2nd=… pts=… total=…` lines |
+| [`cs/cs/serial_ingest/`](../cs/cs/serial_ingest/) | DEMO | Host path when fed **live** Uno Serial from `dartboarddemo.ino` (`band=… zone=… N=… raw=… 2nd=… pts=… total=…`). Fixture/replay log inputs are **ARCHITECTURE** and tagged `synthetic`. |
 | [`cs/cs/muse_osc/`](../cs/cs/muse_osc/) | ARCHITECTURE | OSC :5000 skeleton; `LiveMuseOsc` opt-in only (`CS_LIVE_MUSE=1`) |
 | [`cs/cs/sync/`](../cs/cs/sync/) | ARCHITECTURE | Timeline join for logging; **does not change** firmware `pts` / `total` |
 | [`cs/fixtures/`](../cs/fixtures/) | ARCHITECTURE | `fixture_tag: synthetic` — not measured bench data |
