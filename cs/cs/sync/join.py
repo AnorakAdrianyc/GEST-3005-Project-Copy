@@ -37,6 +37,9 @@ def join_session(
 ) -> list[DualTaskEvent]:
     """
     Build dual-task rows. When eeg_windows is empty/None, emit hit-only rows (EEG null).
+
+    FSR scoring (`hit.pts`, `hit.total`) is always taken from firmware serial as-is;
+    EEG is never merged into session score fields.
     """
     windows = eeg_windows or []
     badge = f"FSR: {fsr_mode} | EEG: {eeg_mode}"

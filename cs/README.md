@@ -6,16 +6,16 @@ Honest bridge between **what ran in the demo** (FSR → Arduino Uno → LCD + bu
 
 | Path | Status | Evidence |
 |------|--------|----------|
-| FSR → Uno → LCD/buzzer | **demo / LIVE** | [`dartboarddemo.ino`](../dartboarddemo.ino) + breadboard hardware |
-| Serial → `HitEvent` | **bridge / LIVE** | Parses existing `band=… zone=… N=… raw=… 2nd=… pts=… total=…` lines at 9600 baud |
-| Muse OSC → load proxy | **scaffold / PLANNED** | `EegSource` + `ReplaySource`; `LiveMuseOsc` behind `CS_LIVE_MUSE=1` or `--live-muse` (default **off**) |
-| Dual-task join | **scaffold** | [`sync/join.py`](cs/sync/join.py) aligns when both streams exist; **FSR-only** rows (`eeg: null`) are valid |
+| FSR → Uno → LCD/buzzer | DEMO | [`dartboarddemo.ino`](../dartboarddemo.ino) + breadboard hardware |
+| Serial → `HitEvent` | ARCHITECTURE | Parses existing `band=… zone=… N=… raw=… 2nd=… pts=… total=…` lines at 9600 baud (bridge to live firmware) |
+| Muse OSC → load proxy | ARCHITECTURE | `EegSource` + `ReplaySource`; `LiveMuseOsc` behind `CS_LIVE_MUSE=1` or `--live-muse` (default **off**) |
+| Dual-task join | ARCHITECTURE | [`sync/join.py`](cs/sync/join.py) attaches EEG windows for logging when explicitly joined; **never** mutates FSR score fields |
 
 ## DEMO vs ARCHITECTURE vs FUTURE
 
 | Label | Meaning in this repo |
 |-------|-------------------------|
-| **DEMO** | Shown live: FSR dartboard firmware only |
+| **DEMO** | Shown live or cited as Results/CAD evidence: FSR dartboard firmware, Fusion/Tinkercad/bench figures (see [`docs/EVIDENCE_MATRIX.md`](../docs/EVIDENCE_MATRIX.md)) |
 | **ARCHITECTURE** | Runnable Python fixtures + interfaces documenting how sync *would* work |
 | **FUTURE** | Closed-loop dual-task, live Muse in-session, clinical claims |
 
@@ -30,14 +30,15 @@ pip install -e .
 python -m cs.cli --replay-fixtures
 ```
 
-Exits 0 and writes [`out/session.jsonl`](out/session.jsonl) (gitignored) with joined rows.
+Exits 0 and writes [`out/session.jsonl`](out/session.jsonl) (gitignored). Fixture replay **joins** synthetic EEG for the architecture demo only; live `--serial` does **not** attach EEG unless you pass `--join-eeg` or opt-in `--live-muse`.
 
 ## Modes
 
 | Command | FSR | EEG |
 |---------|-----|-----|
-| `python -m cs.cli --replay-fixtures` (default) | replay fixture log | replay fixture JSONL |
-| `python -m cs.cli --serial COM3` | live serial | replay EEG fixture unless live Muse enabled |
+| `python -m cs.cli --replay-fixtures` (default) | replay fixture log | replay fixture JSONL (joined for scaffold demo) |
+| `python -m cs.cli --serial COM3` | live serial | **off** (FSR-only rows; score = firmware `pts`/`total` only) |
+| `python -m cs.cli --serial COM3 --join-eeg` | live serial | replay fixture JSONL joined on timeline |
 | `python -m cs.cli --live-muse` + `CS_LIVE_MUSE=1` | off unless `--serial` too | OSC UDP `:5000` skeleton |
 
 Session badge stub: `FSR: live \| EEG: off/replay/live` — see [`cs/badge.py`](cs/badge.py).
@@ -48,7 +49,7 @@ Session badge stub: `FSR: live \| EEG: off/replay/live` — see [`cs/badge.py`](
 |--------|------|
 | [`cs/serial_ingest/`](cs/serial_ingest/) | `dartboarddemo.ino` serial → `HitEvent` |
 | [`cs/muse_osc/`](cs/muse_osc/) | OSC listener STATUS + `ReplaySource` / flag-gated `LiveMuseOsc` |
-| [`cs/sync/`](cs/sync/) | Timestamp join → `session.jsonl` |
+| [`cs/sync/`](cs/sync/) | Timestamp join → `session.jsonl` (EEG sidecar only) |
 | [`fixtures/`](fixtures/) | `synthetic` tagged sample data — not bench N claims |
 
 ## Dependencies
