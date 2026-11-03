@@ -87,6 +87,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="Opt-in: enable Muse OSC listener (also requires CS_LIVE_MUSE=1).",
     )
     parser.add_argument(
+        "--join-eeg",
+        action="store_true",
+        help="Attach replay (or live) EEG windows on the timeline; never changes FSR pts/total.",
+    )
+    parser.add_argument(
         "--fixtures-dir",
         type=Path,
         default=_DEFAULT_FIXTURES,
@@ -145,10 +150,11 @@ def main(argv: list[str] | None = None) -> int:
         live.collect()
         eeg_windows = live.windows()
         logger.info("%s", live.status())
-    else:
+    elif args.join_eeg:
         replay = ReplaySource(args.fixtures_dir / "eeg_windows.jsonl")
         eeg_mode = "replay"
         eeg_windows = replay.windows()
+        logger.info("%s", replay.status())
 
     events = join_session(hits, eeg_windows, fsr_mode=fsr_mode, eeg_mode=eeg_mode)
     write_session_jsonl(args.out, events)
