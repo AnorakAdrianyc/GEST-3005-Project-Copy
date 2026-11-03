@@ -78,8 +78,30 @@ The outline those slides follow is [`Powerpoint Skeleton details.md`](Powerpoint
 | `Smart Triangular Dartboard.pdf` | Earlier bilingual board deck (geometry, snap-fits, scoring notes) |
 | `Simplified Infographic for powerpoint.pdf` | Muse 2 + FSR → computer → game feedback |
 | `Infographic for Powerpoint.pdf` | Longer version of that flow |
+| `cs/` | PC sync layer: serial → HitEvent, Muse OSC scaffold, fixture join |
+| `docs/EVIDENCE_MATRIX.md` | DEMO vs ARCHITECTURE vs FUTURE honesty table |
+| `firmware/README.md` | Pointer to canonical `dartboarddemo.ino` |
 
 The Muse 2 and Python sync described in the presentation are the dual-task concept. They are not in the Arduino sketches. The live demo is the FSR board.
+
+## PC sync layer (`cs/`)
+
+Runnable **architecture** code (not live-session EEG evidence) lives under [`cs/`](cs/):
+
+| What | Status |
+|------|--------|
+| FSR → Uno → LCD + buzzer | **LIVE** — [`dartboarddemo.ino`](dartboarddemo.ino) |
+| Serial → `HitEvent` | **Bridge** — parses the firmware’s `band=… zone=…` debug lines |
+| Muse OSC → cognitive load proxy | **Scaffold** — fixtures + opt-in `CS_LIVE_MUSE=1`; default off |
+| Hit + EEG join → `session.jsonl` | **Scaffold** — FSR-only rows remain valid when EEG is null |
+
+Default (CI-friendly, no hardware):
+
+```bash
+cd cs && pip install -e . && python -m cs.cli --replay-fixtures
+```
+
+Honesty table: [`docs/EVIDENCE_MATRIX.md`](docs/EVIDENCE_MATRIX.md). Closed-loop dual-task in the throw session is **future work**, not something this repo claims was achieved live.
 
 ## Reference
 

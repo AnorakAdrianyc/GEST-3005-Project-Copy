@@ -1,0 +1,28 @@
+name: cs-fixtures
+
+on:
+  push:
+    paths:
+      - "cs/**"
+      - "docs/EVIDENCE_MATRIX.md"
+      - ".github/workflows/cs-fixtures.yml"
+  pull_request:
+    paths:
+      - "cs/**"
+      - "docs/EVIDENCE_MATRIX.md"
+      - ".github/workflows/cs-fixtures.yml"
+
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: cs
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install -e .
+      - run: python -m cs.cli --replay-fixtures --out /tmp/session.jsonl
+      - run: test -s /tmp/session.jsonl

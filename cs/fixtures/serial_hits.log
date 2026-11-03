@@ -1,0 +1,5 @@
+# Fixture serial log — synthetic lines matching dartboarddemo.ino debug format.
+# fixture_tag: synthetic — not bench-validated Newton values.
+band=LIGHT zone=T1 TOP N=1.25 raw=890 2nd=120 pts=10 total=10
+band=MEDIUM zone=T2 CENTER N=4.50 raw=620 2nd=95 pts=50 total=60
+band=HARD zone=T3 LEFT N=8.10 raw=410 2nd=88 pts=30 total=90
