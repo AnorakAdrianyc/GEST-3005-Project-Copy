@@ -7,7 +7,7 @@ Honest bridge between **what ran in the demo** (FSR → Arduino Uno → LCD + bu
 | Path | Status | Evidence |
 |------|--------|----------|
 | FSR → Uno → LCD/buzzer | DEMO | [`dartboarddemo.ino`](../dartboarddemo.ino) + breadboard hardware |
-| Serial → `HitEvent` | ARCHITECTURE | Parses existing `band=… zone=… N=… raw=… 2nd=… pts=… total=…` lines at 9600 baud (bridge to live firmware) |
+| Serial → `HitEvent` | DEMO | Host path when fed live Uno Serial from `dartboarddemo.ino` at 9600 baud. Fixture/replay inputs stay **ARCHITECTURE** and tagged `synthetic`. |
 | Muse OSC → load proxy | ARCHITECTURE | `EegSource` + `ReplaySource`; `LiveMuseOsc` behind `CS_LIVE_MUSE=1` or `--live-muse` (default **off**) |
 | Dual-task join | ARCHITECTURE | [`sync/join.py`](cs/sync/join.py) attaches EEG windows for logging when explicitly joined; **never** mutates FSR score fields |
 
