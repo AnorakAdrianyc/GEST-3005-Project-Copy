@@ -1,6 +1,8 @@
 # Smart Dual-Task Dartboard System
 
-An interactive rehabilitation and gamified dual-task training prototype combining FSR force sensing and EEG brainwave monitoring.
+> **Evidence status (repo truth):** **LIVE demo session = FSR dartboard only** ([`dartboarddemo.ino`](dartboarddemo.ino), LCD + buzzer). **Muse 2 / Bluetooth EEG did not run as part of that live demo.** The sections below describe the **dual-task concept** and target architecture; runnable sync scaffolding (fixtures, not in-session Muse) is in [`cs/`](cs/) and [`docs/EVIDENCE_MATRIX.md`](docs/EVIDENCE_MATRIX.md).
+
+An interactive rehabilitation and gamified dual-task training prototype combining FSR force sensing and EEG brainwave monitoring (concept + planned integration).
 
 ---
 
